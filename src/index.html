@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+
+    <link rel="stylesheet" href="index.css"></style>
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <section class="center-x">
+        <button id="close-button">
+            Close
+        </button>
+    </section>
+    <div id="frame">
+        <canvas class="centered draggable-area" id="canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script src="./idg.js" type="module"></script>
+    <script src="./dist/main.mjs" type="module"></script>
+    <script src="./dist/main.js" nomodule defer></script>
+  </body>
+</html>
