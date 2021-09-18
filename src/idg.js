@@ -1,8 +1,22 @@
 import {upgradeElement} from './dist/main.mjs';
+const { ipcRenderer } = require('electron')
+
+
 upgradeElement(document.getElementById('canvas'), './dist/worker/worker.mjs');
 console.log("index.js loaded");
 
 document.getElementById("close-button").addEventListener("click", ()=>window.close());
+
+
+
+let gatherFileInfo = new Promise((resolve, reject) => {
+  ipcRenderer.on('open-file', function(e, filepath) {
+    console.log(e, filepath);
+    resolve(filepath);
+  });
+})
+
+
 
 function spreadRGB(input) {
     const red = ((input>>16) & 0x0ff);
@@ -22,7 +36,7 @@ function coordinatesByIndex(i, width) {
 }
 
 let machine = null;
-const imageURL = "seeds.idg";
+const imageURL = await gatherFileInfo;
 const canvas = document.getElementById('canvas');
 console.log(canvas)
 
@@ -65,4 +79,4 @@ const loadVM = (startOnLoad = false) => {
     }
 }
 
-loadVM(true);
+gatherFileInfo.then(()=>loadVM(true));

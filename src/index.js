@@ -6,6 +6,9 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
+var filepath;
+var ready = false;
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -13,19 +16,41 @@ const createWindow = () => {
     height: 600,
     transparent: true,
     frame: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+  }
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.webContents.on('did-finish-load', function() {
+    if (filepath) {
+        mainWindow.webContents.send('open-file', filepath);
+        filepath = null;
+    }
+  });
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  ready = true;
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+app.on("open-file", function(event, path) { // TODO: this is macos only.
+  // On Windows, you have to parse process.argv (in the main process) to get the filepath.
+
+  event.preventDefault();
+  filepath = path;
+
+  if (ready) {
+      mainWindow.webContents.send('open-file', filepath);
+      filepath = null;
+
+      return;
+  }
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

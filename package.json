@@ -44,6 +44,16 @@
       ]
     }
   },
+  "build": {
+    "fileAssociations": [
+      {
+        "ext": "idg",
+        "name": "IDG File",
+        "role": "Editor",
+        "perMachine": true
+      }
+    ]
+  },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0"
   },
